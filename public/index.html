@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="ca">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DSABANK - La teva banca de confiança</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #003d82;
+            --secondary-blue: #0056b3;
+            --accent-gold: #d4af37;
+            --light-gray: #f5f7fa;
+            --dark-gray: #333;
+            --success-green: #28a745;
+            --error-red: #dc3545;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #e8ecf1 100%);
+            color: var(--dark-gray);
+            line-height: 1.6;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+            color: white;
+            padding: 1.5rem 0;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .logo::before {
+            content: "🏦";
+            font-size: 2rem;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+        }
+
+        nav a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        nav a:hover {
+            color: var(--accent-gold);
+        }
+
+        .hero {
+            background: linear-gradient(135deg, rgba(0, 61, 130, 0.95) 0%, rgba(0, 86, 179, 0.95) 100%),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 600"><rect fill="%23003d82" width="1200" height="600"/><circle cx="200" cy="150" r="100" fill="rgba(255,255,255,0.03)"/><circle cx="900" cy="400" r="150" fill="rgba(255,255,255,0.03)"/><circle cx="600" cy="300" r="80" fill="rgba(255,255,255,0.03)"/></svg>');
+            color: white;
+            padding: 4rem 2rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .hero p {
+            font-size: 1.3rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            opacity: 0.95;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 3rem auto;
+            padding: 0 2rem;
+        }
+
+        .section {
+            background: white;
+            border-radius: 12px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .section:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 25px rgba(0, 0, 0, 0.12);
+        }
+
+        .section h2 {
+            color: var(--primary-blue);
+            margin-bottom: 1.5rem;
+            font-size: 1.8rem;
+            border-bottom: 3px solid var(--accent-gold);
+            padding-bottom: 0.5rem;
+            display: inline-block;
+        }
+
+        .input-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: var(--dark-gray);
+        }
+
+        input, select {
+            width: 100%;
+            padding: 0.8rem;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, select:focus {
+            outline: none;
+            border-color: var(--secondary-blue);
+        }
+
+        .btn {
+            background: linear-gradient(135deg, var(--secondary-blue) 0%, var(--primary-blue) 100%);
+            color: white;
+            padding: 0.9rem 2rem;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.3s;
+            box-shadow: 0 4px 10px rgba(0, 61, 130, 0.3);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 61, 130, 0.4);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+            margin-left: 0.5rem;
+        }
+
+        .result-box {
+            background: var(--light-gray);
+            border-left: 4px solid var(--primary-blue);
+            padding: 1.5rem;
+            border-radius: 6px;
+            margin-top: 1.5rem;
+            display: none;
+        }
+
+        .result-box.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .client-card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border: 2px solid #e9ecef;
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1rem;
+            transition: all 0.3s;
+        }
+
+        .client-card:hover {
+            border-color: var(--secondary-blue);
+            box-shadow: 0 4px 12px rgba(0, 86, 179, 0.15);
+        }
+
+        .account-info {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .account-item {
+            background: white;
+            padding: 1rem;
+            border-radius: 6px;
+            border-left: 4px solid var(--accent-gold);
+        }
+
+        .alert {
+            padding: 1rem;
+            border-radius: 6px;
+            margin-top: 1rem;
+            display: none;
+        }
+
+        .alert.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .movement-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-top: 1rem;
+        }
+
+        .movement-item {
+            background: #f8f9fa;
+            padding: 1rem;
+            border-radius: 6px;
+            margin-bottom: 0.5rem;
+            border-left: 4px solid var(--primary-blue);
+        }
+
+        footer {
+            background: var(--dark-gray);
+            color: white;
+            text-align: center;
+            padding: 2rem;
+            margin-top: 4rem;
+        }
+
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            border-top-color: white;
+            animation: spin 0.8s linear infinite;
+            margin-left: 0.5rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 100%);
+            color: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+    </style>
+</head>
+<body>
+<header>
+    <div class="header-content">
+        <div class="logo">DSABANK</div>
+        <nav>
+            <ul>
+                <li><a href="#consultes">Consultes</a></li>
+                <li><a href="#operacions">Operacions</a></li>
+                <li><a href="#info">Informació</a></li>
+            </ul>
+        </nav>
+    </div>
+</header>
+
+<div class="hero">
+    <h1>Benvingut a DSABANK</h1>
+    <p>La teva seguretat financera és la nostra prioritat. Gestiona els teus comptes amb confiança i transparència.</p>
+</div>
+
+<div class="container">
+    <!-- Client Information Section -->
+    <div class="section" id="consultes">
+        <h2>📊 Consulta d'Informació</h2>
+
+        <div class="grid-2">
+            <div>
+                <h3 style="color: var(--secondary-blue); margin-bottom: 1rem;">Informació del Client</h3>
+                <div class="input-group">
+                    <label for="clientID">ID del Client:</label>
+                    <input type="number" id="clientID" placeholder="Introdueix l'ID del client">
+                </div>
+                <button class="btn" onclick="getClient()">Consultar Client</button>
+                <button class="btn btn-secondary" onclick="getAllClients()">Veure Tots els Clients</button>
+            </div>
+
+            <div>
+                <h3 style="color: var(--secondary-blue); margin-bottom: 1rem;">Informació del Compte</h3>
+                <div class="input-group">
+                    <label for="accountClientID">ID del Client:</label>
+                    <input type="number" id="accountClientID" placeholder="ID del client">
+                </div>
+                <div class="input-group">
+                    <label for="accountIBAN">IBAN:</label>
+                    <input type="text" id="accountIBAN" placeholder="Ex: ES111">
+                </div>
+                <button class="btn" onclick="getAccount()">Consultar Compte</button>
+            </div>
+        </div>
+
+        <div id="clientResult" class="result-box"></div>
+        <div id="alertClient" class="alert"></div>
+    </div>
+
+    <!-- Operations Section -->
+    <div class="section" id="operacions">
+        <h2>💰 Operacions Bancàries</h2>
+
+        <div class="grid-2">
+            <div>
+                <h3 style="color: var(--secondary-blue); margin-bottom: 1rem;">Fer Dipòsit</h3>
+                <div class="input-group">
+                    <label for="depositIBAN">IBAN:</label>
+                    <input type="text" id="depositIBAN" placeholder="Ex: ES111">
+                </div>
+                <div class="input-group">
+                    <label for="depositAmount">Import (€):</label>
+                    <input type="number" id="depositAmount" step="0.01" placeholder="0.00">
+                </div>
+                <button class="btn" onclick="makeDeposit()">Fer Dipòsit</button>
+                <div id="alertDeposit" class="alert"></div>
+            </div>
+
+            <div>
+                <h3 style="color: var(--secondary-blue); margin-bottom: 1rem;">Fer Retirada</h3>
+                <div class="input-group">
+                    <label for="refundIBAN">IBAN:</label>
+                    <input type="text" id="refundIBAN" placeholder="Ex: ES111">
+                </div>
+                <div class="input-group">
+                    <label for="refundAmount">Import (€):</label>
+                    <input type="number" id="refundAmount" step="0.01" placeholder="0.00">
+                </div>
+                <button class="btn" onclick="makeRefund()">Fer Retirada</button>
+                <div id="alertRefund" class="alert"></div>
+            </div>
+        </div>
+
+        <div style="margin-top: 2rem; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); padding: 2rem; border-radius: 8px;">
+            <h3 style="color: var(--secondary-blue); margin-bottom: 1rem;">Fer Transferència</h3>
+            <div class="grid-2">
+                <div class="input-group">
+                    <label for="transferOrigin">IBAN Origen:</label>
+                    <input type="text" id="transferOrigin" placeholder="Ex: ES111">
+                </div>
+                <div class="input-group">
+                    <label for="transferDest">IBAN Destí:</label>
+                    <input type="text" id="transferDest" placeholder="Ex: ES222">
+                </div>
+            </div>
+            <div class="input-group">
+                <label for="transferAmount">Import (€):</label>
+                <input type="number" id="transferAmount" step="0.01" placeholder="0.00" style="max-width: 300px;">
+            </div>
+            <button class="btn" onclick="makeTransfer()">Realitzar Transferència</button>
+            <div id="alertTransfer" class="alert"></div>
+        </div>
+    </div>
+
+    <!-- Movement Information -->
+    <div class="section">
+        <h2>📋 Consulta de Moviments</h2>
+        <div class="grid-2">
+            <div class="input-group">
+                <label for="movClientID">ID del Client:</label>
+                <input type="number" id="movClientID" placeholder="ID del client">
+            </div>
+            <div class="input-group">
+                <label for="movIBAN">IBAN:</label>
+                <input type="text" id="movIBAN" placeholder="Ex: ES111">
+            </div>
+        </div>
+        <div class="input-group">
+            <label for="movID">ID del Moviment:</label>
+            <input type="number" id="movID" placeholder="ID del moviment" style="max-width: 300px;">
+        </div>
+        <button class="btn" onclick="getMovement()">Consultar Moviment</button>
+        <div id="movementResult" class="result-box"></div>
+        <div id="alertMovement" class="alert"></div>
+    </div>
+</div>
+
+<footer>
+    <p>&copy; 2025 DSABANK - Tots els drets reservats</p>
+    <p style="margin-top: 0.5rem; opacity: 0.8;">Entitat bancària regulada | Fons de Garantia de Dipòsits</p>
+</footer>
+
+<script>
+    // API configuration - adjust if your server runs on a different port
+    const API_BASE = '/dsaApp/DSABANK';
+
+    function showAlert(elementId, message, isSuccess) {
+        const alert = document.getElementById(elementId);
+        alert.className = `alert ${isSuccess ? 'alert-success' : 'alert-error'} show`;
+        alert.textContent = message;
+        setTimeout(() => {
+            alert.classList.remove('show');
+        }, 5000);
+    }
+
+    async function getClient() {
+        const clientID = document.getElementById('clientID').value;
+        if (!clientID) {
+            showAlert('alertClient', 'Si us plau, introdueix un ID de client', false);
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE}/${clientID}`);
+            if (response.ok) {
+                const data = await response.json();
+                displayClient(data);
+                showAlert('alertClient', 'Client trobat correctament', true);
+            } else {
+                showAlert('alertClient', 'Client no trobat', false);
+                document.getElementById('clientResult').classList.remove('show');
+            }
+        } catch (error) {
+            showAlert('alertClient', 'Error de connexió amb el servidor', false);
+        }
+    }
+
+    async function getAllClients() {
+        try {
+            const response = await fetch(`${API_BASE}/clients`);
+            if (response.ok) {
+                const data = await response.json();
+                displayAllClients(data);
+                showAlert('alertClient', `${data.length} clients trobats`, true);
+            } else {
+                showAlert('alertClient', 'Error al obtenir els clients', false);
+            }
+        } catch (error) {
+            showAlert('alertClient', 'Error de connexió amb el servidor', false);
+        }
+    }
+
+    function displayClient(client) {
+        const resultBox = document.getElementById('clientResult');
+        let html = `
+            <div class="client-card">
+                <h3 style="color: var(--primary-blue); margin-bottom: 1rem;">
+                    ${client.nom} ${client.cognoms}
+                </h3>
+                <div class="stats-grid">
+                    <div style="background: #f8f9fa; padding: 1rem; border-radius: 6px;">
+                        <strong>ID:</strong> ${client.id}
+                    </div>
+                    <div style="background: #f8f9fa; padding: 1rem; border-radius: 6px;">
+                        <strong>DNI:</strong> ${client.dni}
+                    </div>
+                    <div style="background: #f8f9fa; padding: 1rem; border-radius: 6px;">
+                        <strong>Email:</strong> ${client.email}
+                    </div>
+                    <div style="background: #f8f9fa; padding: 1rem; border-radius: 6px;">
+                        <strong>Ciutat:</strong> ${client.ciutat}
+                    </div>
+                </div>
+        `;
+
+        if (client.comptes && client.comptes.length > 0) {
+            html += '<h4 style="margin-top: 1.5rem; color: var(--secondary-blue);">Comptes:</h4>';
+            html += '<div class="account-info">';
+            client.comptes.forEach(compte => {
+                html += `
+                    <div class="account-item">
+                        <strong style="color: var(--primary-blue);">${compte.iban}</strong>
+                        <p style="margin: 0.5rem 0;">Tipus: ${compte.tipus}</p>
+                        <p style="font-size: 1.3rem; font-weight: bold; color: var(--success-green);">
+                            ${compte.saldo.toFixed(2)} €
+                        </p>
+                        <small style="color: #666;">${compte.moviments.length} moviments</small>
+                    </div>
+                `;
+            });
+            html += '</div>';
+        }
+        html += '</div>';
+
+        resultBox.innerHTML = html;
+        resultBox.classList.add('show');
+    }
+
+    function displayAllClients(clients) {
+        const resultBox = document.getElementById('clientResult');
+        let html = '<div class="stats-grid">';
+        html += `
+            <div class="stat-card">
+                <div class="stat-value">${clients.length}</div>
+                <div class="stat-label">Total Clients</div>
+            </div>
+        `;
+
+        let totalAccounts = 0;
+        let totalBalance = 0;
+        clients.forEach(client => {
+            totalAccounts += client.comptes.length;
+            client.comptes.forEach(compte => {
+                totalBalance += compte.saldo;
+            });
+        });
+
+        html += `
+            <div class="stat-card">
+                <div class="stat-value">${totalAccounts}</div>
+                <div class="stat-label">Total Comptes</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value">${totalBalance.toFixed(0)} €</div>
+                <div class="stat-label">Saldo Total</div>
+            </div>
+        `;
+        html += '</div>';
+
+        clients.forEach(client => {
+            html += `
+                <div class="client-card" style="margin-top: 1rem;">
+                    <h4 style="color: var(--primary-blue);">${client.nom} ${client.cognoms}</h4>
+                    <p><strong>ID:</strong> ${client.id} | <strong>DNI:</strong> ${client.dni}</p>
+                    <p><strong>Comptes:</strong> ${client.comptes.length}</p>
+                </div>
+            `;
+        });
+
+        resultBox.innerHTML = html;
+        resultBox.classList.add('show');
+    }
+
+    async function getAccount() {
+        const clientID = document.getElementById('accountClientID').value;
+        const iban = document.getElementById('accountIBAN').value;
+
+        if (!clientID || !iban) {
+            showAlert('alertClient', 'Si us plau, omple tots els camps', false);
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE}/${clientID}/${iban}`);
+            if (response.ok) {
+                const data = await response.json();
+                displayAccount(data);
+                showAlert('alertClient', 'Compte trobat correctament', true);
+            } else {
+                showAlert('alertClient', 'Compte no trobat', false);
+            }
+        } catch (error) {
+            showAlert('alertClient', 'Error de connexió amb el servidor', false);
+        }
+    }
+
+    function displayAccount(compte) {
+        const resultBox = document.getElementById('clientResult');
+        let html = `
+            <div class="client-card">
+                <h3 style="color: var(--primary-blue);">Compte ${compte.iban}</h3>
+                <div class="account-info">
+                    <div class="account-item">
+                        <strong>Tipus:</strong> ${compte.tipus}
+                    </div>
+                    <div class="account-item">
+                        <strong>Saldo:</strong> <span style="color: var(--success-green); font-size: 1.3rem; font-weight: bold;">${compte.saldo.toFixed(2)} €</span>
+                    </div>
+                    <div class="account-item">
+                        <strong>Moviments:</strong> ${compte.moviments.length}
+                    </div>
+                </div>
+        `;
+
+        if (compte.moviments && compte.moviments.length > 0) {
+            html += '<h4 style="margin-top: 1rem; color: var(--secondary-blue);">Moviments:</h4>';
+            html += '<div class="movement-list">';
+            compte.moviments.forEach(mov => {
+                html += `
+                    <div class="movement-item">
+                        <strong>ID:</strong> ${mov.id} |
+                        <strong>Tipus:</strong> ${mov.tipus} |
+                        <strong>Import:</strong> <span style="color: ${mov.import >= 0 ? 'var(--success-green)' : 'var(--error-red)'}; font-weight: bold;">
+                            ${mov.import >= 0 ? '+' : ''}${mov.import.toFixed(2)} €
+                        </span>
+                    </div>
+                `;
+            });
+            html += '</div>';
+        }
+        html += '</div>';
+
+        resultBox.innerHTML = html;
+        resultBox.classList.add('show');
+    }
+
+    async function makeDeposit() {
+        const iban = document.getElementById('depositIBAN').value;
+        const amount = parseFloat(document.getElementById('depositAmount').value);
+
+        if (!iban || !amount || amount <= 0) {
+            showAlert('alertDeposit', 'Si us plau, introdueix dades vàlides', false);
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE}/${iban}/deposit?import=${amount}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                showAlert('alertDeposit', `Dipòsit de ${amount.toFixed(2)}€ realitzat correctament`, true);
+                document.getElementById('depositAmount').value = '';
+            } else {
+                showAlert('alertDeposit', 'Error al realitzar el dipòsit', false);
+            }
+        } catch (error) {
+            showAlert('alertDeposit', 'Error de connexió amb el servidor', false);
+        }
+    }
+
+    async function makeRefund() {
+        const iban = document.getElementById('refundIBAN').value;
+        const amount = parseFloat(document.getElementById('refundAmount').value);
+
+        if (!iban || !amount || amount <= 0) {
+            showAlert('alertRefund', 'Si us plau, introdueix dades vàlides', false);
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE}/${iban}/refund?import=${amount}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                showAlert('alertRefund', `Retirada de ${amount.toFixed(2)}€ realitzada correctament`, true);
+                document.getElementById('refundAmount').value = '';
+            } else {
+                const errorMsg = await response.text();
+                showAlert('alertRefund', errorMsg || 'Saldo insuficient', false);
+            }
+        } catch (error) {
+            showAlert('alertRefund', 'Error de connexió amb el servidor', false);
+        }
+    }
+
+    async function makeTransfer() {
+        const origin = document.getElementById('transferOrigin').value;
+        const dest = document.getElementById('transferDest').value;
+        const amount = parseFloat(document.getElementById('transferAmount').value);
+
+        if (!origin || !dest || !amount || amount <= 0) {
+            showAlert('alertTransfer', 'Si us plau, omple tots els camps correctament', false);
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE}/${origin}/${dest}/transfer?import=${amount}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+
+            if (response.ok) {
+                showAlert('alertTransfer', `Transferència de ${amount.toFixed(2)}€ realitzada correctament`, true);
+                document.getElementById('transferAmount').value = '';
+            } else {
+                showAlert('alertTransfer', 'Error en la transferència', false);
+            }
+        } catch (error) {
+            showAlert('alertTransfer', 'Error de connexió amb el servidor', false);
+        }
+    }
+
+    async function getMovement() {
+        const clientID = document.getElementById('movClientID').value;
+        const iban = document.getElementById('movIBAN').value;
+        const movID = document.getElementById('movID').value;
+
+        if (!clientID || !iban || !movID) {
+            showAlert('alertMovement', 'Si us plau, omple tots els camps', false);
+            return;
+        }
+
+        try {
+            const response = await fetch(`${API_BASE}/${clientID}/${iban}/${movID}`);
+            if (response.ok) {
+                const data = await response.json();
+                displayMovement(data);
+                showAlert('alertMovement', 'Moviment trobat correctament', true);
+            } else {
+                showAlert('alertMovement', 'Moviment no trobat', false);
+            }
+        } catch (error) {
+            showAlert('alertMovement', 'Error de connexió amb el servidor', false);
+        }
+    }
+
+    function displayMovement(moviment) {
+        const resultBox = document.getElementById('movementResult');
+        const isPositive = moviment.import >= 0;
+
+        resultBox.innerHTML = `
+            <div class="client-card">
+                <h3 style="color: var(--primary-blue);">Detalls del Moviment</h3>
+                <div class="account-info">
+                    <div class="account-item">
+                        <strong>ID Moviment:</strong> ${moviment.id}
+                    </div>
+                    <div class="account-item">
+                        <strong>Tipus:</strong> ${moviment.tipus}
+                    </div>
+                    <div class="account-item">
+                        <strong>Import:</strong><br>
+                        <span style="color: ${isPositive ? 'var(--success-green)' : 'var(--error-red)'}; font-size: 1.5rem; font-weight: bold;">
+                            ${isPositive ? '+' : ''}${moviment.import.toFixed(2)} €
+                        </span>
+                    </div>
+                </div>
+            </div>
+        `;
+        resultBox.classList.add('show');
+    }
+</script>
+</body>
+</html>
