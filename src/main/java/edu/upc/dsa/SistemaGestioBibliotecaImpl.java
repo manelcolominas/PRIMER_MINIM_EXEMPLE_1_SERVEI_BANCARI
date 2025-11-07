@@ -9,46 +9,80 @@ import edu.upc.dsa.exceptions.CompteNotFoundException;
 import edu.upc.dsa.exceptions.SaldoInsuficientException;
 import org.apache.log4j.Logger;
 
-public class SistemaGestioDSABANKImpl implements SistemaGestioDSABANK {
-    private static SistemaGestioDSABANKImpl instance;
+public class SistemaGestioBibliotecaImpl implements SistemaGestioBiblioteca {
+    private static SistemaGestioBibliotecaImpl instance;
 
-    private LlistaClients llistaClients;  // Llista principal de clients
-    final static Logger logger = Logger.getLogger(SistemaGestioDSABANKImpl.class);
+    private LlistaLectors llistaLectors;  // Llista principal de lectors
+    private Munts munts;
+    public LlibresCatalogats llibresCatalogats;
 
-    private SistemaGestioDSABANKImpl() {
-        this.llistaClients = new LlistaClients();
+    final static Logger logger = Logger.getLogger(SistemaGestioBibliotecaImpl.class);
+
+    private SistemaGestioBibliotecaImpl() {
+        this.llistaLectors = new LlistaLectors();
+        this.munts = new Munts();
+        this.llibresCatalogats = new LlibresCatalogats();
     }
 
-    public static SistemaGestioDSABANKImpl getInstance() {
+    public static SistemaGestioBibliotecaImpl getInstance() {
         if (instance == null) {
-            instance = new SistemaGestioDSABANKImpl();
+            instance = new SistemaGestioBibliotecaImpl();
         }
         return instance;
     }
 
+    public Llibre getLlibreCatalogat(String isbn) {
+        for (Llibre l : this.llibresCatalogats.getLlibres()) {
+            if (l.getISBN().equals(isbn)) {
+                return l;
+            }
+        }
+        return null; // no trobat
+    }
+
+    public Prestec ferPrestec(int idLector, int idLlibre, String dataPrestec, String dataDevolucio) {
+        Prestec prestec = new Prestec(idLector, idLlibre, dataPrestec, dataDevolucio);
+        return prestec;
+    }
+
     // 👥 Afegir client
-    public void addClient(Client c) {
-        if (c != null) {
-            this.llistaClients.afegirClient(c);
+    public void addLector(Lector l) {
+        if (l != null) {
+            this.llistaLectors.afegirLector(l);
         }
     }
 
+    // Emmagatzemar llibre
+    public void addLlibre(Llibre l) {
+        if (l != null) {
+            this.munts.emmagatzemarLlibre(l);
+        }
+    }
+
+    public Munts getMunts() {
+        return munts;
+    }
+
+    public void setMunts(Munts munts) {
+        this.munts = munts;
+    }
+
     public int sizeClients() {
-        return this.llistaClients.getClients().size();
+        return this.llistaLectors.getClients().size();
     }
 
-    // 🔍 Obtenir client per ID
-    public Client getClient(int id) {
-        return this.llistaClients.getClientById(id);
+    // 🔍 Obtenir lector per ID
+    public Lector getLector(int id) {
+        return this.llistaLectors.getLectorByID(id);
     }
 
-    public List<Client> getAllClients() {
+    public List<Lector> getAllClients() {
         return new ArrayList<>(this.llistaClients.getClients());
     }
 
     // 🔍 Obtenir un compte d’un client concret
     public Compte getCompteClient(int clientId, String IBAN) {
-        Client c = getClient(clientId);
+        Lector c = getClient(clientId);
         if (c == null || c.getComptes() == null) return null;
         for (Compte compte : c.getComptes()) {
             if (compte.getIBAN().equals(IBAN)) return compte;
@@ -58,7 +92,7 @@ public class SistemaGestioDSABANKImpl implements SistemaGestioDSABANK {
 
     @Override
     public void getCompteClientThrowsException(int clientId, String IBAN) throws ClientNotFoundException {
-        Client c = getClient(clientId);
+        Lector c = getClient(clientId);
         if (c == null || c.getComptes() == null){
             throw new ClientNotFoundException("Client not found");
         }
@@ -69,7 +103,7 @@ public class SistemaGestioDSABANKImpl implements SistemaGestioDSABANK {
 
     // 🔍 Obtenir moviment
     public Moviment getMoviment(String IBAN, int idMoviment) {
-        for (Client c : this.llistaClients.getClients()) {
+        for (Lector c : this.llistaClients.getClients()) {
             if (c.getComptes() != null) {
                 for (Compte compte : c.getComptes()) {
                     if (compte.getIBAN().equals(IBAN) && compte.getMoviments() != null) {
@@ -85,7 +119,7 @@ public class SistemaGestioDSABANKImpl implements SistemaGestioDSABANK {
 
     @Override
     public void addCompte(int clientId, String IBAN, String tipus) {
-        for (Client c : this.llistaClients.getClients()) {
+        for (Lector c : this.llistaClients.getClients()) {
             if (c.getId() == clientId) {
                 Compte compte = new Compte(IBAN, 0,tipus);
                 c.afegirCompte(compte);
@@ -97,7 +131,7 @@ public class SistemaGestioDSABANKImpl implements SistemaGestioDSABANK {
     public void addCompteThrowsException(int clientId, String IBAN, String tipus) throws ClientNotFoundException {
         boolean trobat = false;
 
-        for (Client c : this.llistaClients.getClients()) {
+        for (Lector c : this.llistaClients.getClients()) {
             if (c.getId() == clientId) {
                 Compte compte = new Compte(IBAN, 0, tipus);
                 c.afegirCompte(compte);
@@ -180,7 +214,7 @@ public class SistemaGestioDSABANKImpl implements SistemaGestioDSABANK {
 
     // 🧭 Buscar compte per IBAN dins de tots els clients
     public Compte getComptePerIBAN(String IBAN) {
-        for (Client c : this.llistaClients.getClients()) {
+        for (Lector c : this.llistaClients.getClients()) {
             if (c.getComptes() != null) {
                 for (Compte compte : c.getComptes()) {
                     if (compte.getIBAN().equals(IBAN)) return compte;
