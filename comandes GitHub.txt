@@ -85,6 +85,8 @@ merge -> juntar els canvis fets pel teu company i tu, unificar branques
 
 git tindra problemes   quan treballem en el mateix arxiu
 
+© Manel Colominas - Tots els drets reservats
+
 
 
 

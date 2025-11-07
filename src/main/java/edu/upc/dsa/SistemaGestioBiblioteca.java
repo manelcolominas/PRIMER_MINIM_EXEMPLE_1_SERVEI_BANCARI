@@ -1,18 +1,17 @@
 package edu.upc.dsa;
 
 import edu.upc.dsa.classes.*;
-import edu.upc.dsa.exceptions.SaldoInsuficientException;
 
 import java.util.List;
 
-public interface SistemaGestioDSABANK {
+public interface SistemaGestioBiblioteca {
     // 🔍 Consultes
-    Client getClient(int id);
-    List<Client> getAllClients();
+    Lector getClient(int id);
+    List<Lector> getAllClients();
     Compte getCompteClient(int clientId, String IBAN);
     Moviment getMoviment(String IBAN, int idMoviment);
     void addCompte(int clientId, String IBAN, String tipus);
-    void addClient(Client c);
+    void addLector(Lector lector);
 
     // 💰 Operacions bancàries
     boolean ferDiposit(String IBAN, double import_);
@@ -33,4 +32,5 @@ public interface SistemaGestioDSABANK {
     void ferRetiradaThrowsException(String IBAN, double import_);
     void getCompteClientThrowsException(int clientId, String IBAN);
     void ferTransferenciaThrowsException(String IBANOrigen, String IBANDesti, double import_);
+
 }
