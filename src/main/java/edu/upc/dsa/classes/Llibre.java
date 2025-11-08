@@ -34,6 +34,13 @@ public class Llibre {
         this.numexemplars = 0;
     }
 
+    public void incrementarExemplars() {
+        numexemplars++;
+    }
+
+    public void decrementarExemplars() {
+        numexemplars--;
+    }
 
     public int getId() {
         return id;
@@ -105,14 +112,6 @@ public class Llibre {
 
     public void setNumexemplars(int numexemplars) {
         this.numexemplars = numexemplars;
-    }
-
-    public void incrementarExemplars() {
-        numexemplars++;
-    }
-
-    public void decrementarExemplars() {
-        numexemplars--;
     }
 
     // 🧾 Representació del client

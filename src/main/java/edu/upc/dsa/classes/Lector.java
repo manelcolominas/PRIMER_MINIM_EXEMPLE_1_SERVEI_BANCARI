@@ -5,9 +5,6 @@ import java.util.List;
 
 public class Lector {
 
-    // 🔢 Comptador d'IDs automàtic
-    private static int nextId = 1;
-
     // 🧱 Atributs
     private int id;
     private String nom;
@@ -22,20 +19,12 @@ public class Lector {
 
     // 🔧 Constructor buit (necessari per frameworks o JSON)
     public Lector() {
-        this.id = nextId++;
         this.prestecs = new ArrayList<>();
     }
 
     // 🔧 Constructor complet
-    public Lector(String nom, String cognom1, String cognom2, String dni,String datanaixement, String llocnaixement, String adreca) {
-        this.id = nextId++;
-        this.nom = nom;
-        this.cognom1 = cognom1;
-        this.cognom2 = cognom2;
-        this.dni = dni;
-        this.datanaixement = datanaixement;
-        this.llocnaixement = llocnaixement;
-        this.adreca = adreca;
+    public Lector(int id) {
+        this.id = id;
         this.prestecs = new ArrayList<>();
     }
 
@@ -105,6 +94,24 @@ public class Lector {
 
     public void setAdreca(String adreca) {
         this.adreca = adreca;
+    }
+
+    public List<Prestec>  getPrestecs() {
+        return prestecs;
+    }
+
+    public void setPrestecs(List<Prestec> prestecs) {
+        this.prestecs = prestecs;
+    }
+
+    public void setAllAtributs(String nom, String cognom1, String cognom2, String dni,String datanaixement, String llocnaixement, String adreca){
+        this.nom=nom;
+        this.cognom1=cognom1;
+        this.cognom2=cognom2;
+        this.dni=dni;
+        this.datanaixement=datanaixement;
+        this.llocnaixement=llocnaixement;
+        this.adreca=adreca;
     }
 
     // 🧾 Representació del client

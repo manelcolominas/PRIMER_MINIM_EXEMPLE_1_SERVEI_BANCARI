@@ -1,36 +1,32 @@
 package edu.upc.dsa;
 
 import edu.upc.dsa.classes.*;
+import edu.upc.dsa.exceptions.CanNotStoreBook;
+import edu.upc.dsa.exceptions.LectorNotFoundException;
+import edu.upc.dsa.exceptions.NotEnoughCopies;
 
 import java.util.List;
 
 public interface SistemaGestioBiblioteca {
-    // 🔍 Consultes
-    Lector getClient(int id);
-    List<Lector> getAllClients();
-    Compte getCompteClient(int clientId, String IBAN);
-    Moviment getMoviment(String IBAN, int idMoviment);
-    void addCompte(int clientId, String IBAN, String tipus);
-    void addLector(Lector lector);
 
-    // 💰 Operacions bancàries
-    boolean ferDiposit(String IBAN, double import_);
+    Prestec ferPrestec(int idLector, Llibre llibre, String dataPrestec, String dataDevolucio);
+    Llibre getLlibreCatalogatByISBN(String isbn);
+    void addLector(Lector l);
+    void addLlibre(Llibre l);
+    Munts getMunts();
+    void setMunts(Munts munts);
+    int sizeLectors();
+    Lector getLector(int id);
+    Llibre catalogarLlibre();
 
-    // 💸 Fer retirada
-
-    boolean ferRetirada(String IBAN, double import_);
-    boolean ferTransferencia(String IBANOrigen, String IBANDesti, double import_);
-    Compte getComptePerIBAN(String IBAN);
-
-    // 👥 Gestió de clients
-    int sizeClients();
     void clear();
+    void actualitzarDadesLector(int i, String anna, String pérez, String garcía, String s, String s1, String barcelona, String s2);
 
-    // mètodes que tiren excepcions
-    void addCompteThrowsException(int clientId, String IBAN, String tipus);
-    void ferDipositThrowsException(String IBAN, double import_);
-    void ferRetiradaThrowsException(String IBAN, double import_);
-    void getCompteClientThrowsException(int clientId, String IBAN);
-    void ferTransferenciaThrowsException(String IBANOrigen, String IBANDesti, double import_);
+    //TEST EXCEPTIONS
+    void getLectorException(int id) throws LectorNotFoundException;
+    void addLlibreException(Llibre llibre) throws CanNotStoreBook;
+    void catalogarLlibreException() throws CanNotStoreBook;
 
+    void ferPrestecException(int i, Llibre llibre, String date, String date1)  throws NotEnoughCopies;
+    void actualitzarDadesLectorException(int i, String nom, String cognom, String cognom2, String dni, String date, String lloc, String adreça) throws LectorNotFoundException;
 }

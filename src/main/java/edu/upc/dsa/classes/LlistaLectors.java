@@ -26,18 +26,11 @@ public class LlistaLectors {
         return null; // si no el troba
     }
 
-    // 📋 Llistar tots els clients
-    public List<Lector> getLector() {
+    public List<Lector> getLectors() {
         return this.lectors;
     }
 
-    // ❌ Eliminar un lector per ID
-    public boolean eliminarLector(int id) {
-        Lector lector = getLectorByID(id);
-        if (lector != null) {
-            this.lectors.remove(lector);
-            return true;
-        }
-        return false;
+    public int size() {
+        return this.lectors.size();
     }
 }

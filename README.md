@@ -1,6 +1,5 @@
-
-
-
-he fet les classes
-he començat a implementar el servei REST,
-he començat amb el IMPL, falta acabar el IMPL, el test i altres fitxers, falta molta cosa per fer, pero l'estructura basica del projecte esta feta, no he pogut encara executar el projecte en la seva totalitat, hi ha residus d'un projecte que vaig fer per a estudiar per a l'examen
+He acabat l'examen al complet, m'he pres la llibertat d'afegir algunes operacions més, ja que per al testeig i la implentacio del que es demanava a l'enunciat em facilitava la feina 
+OPERACIONS AFEGIDES:
+// TORNAR LLISTA DE LLIBRES CATALOGATS PER TEMATICA;
+// TORNAR TOTA LA LLISTA DE LLIBRES CATALOGATS
+// TORNAR LLISTA DE LECTORS;
